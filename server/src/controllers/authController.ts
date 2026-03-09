@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import registerSchema from "../types/auth.types";
+import { loginSchema, registerSchema } from "../types/auth.types";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import generateToken from "../config/jwt";
@@ -23,7 +23,7 @@ export const registerUser = async (req: Request, res: Response) => {
     email: email,
     password: hashedPassword,
   });
- 
+
   const token = generateToken(newUser._id.toString());
   res.status(201).json({
     message: "User created",
@@ -34,4 +34,33 @@ export const registerUser = async (req: Request, res: Response) => {
     },
     token,
   });
+};
+
+export const loginUser = async(req: Request, res: Response) => {
+  const result = loginSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ message: result.error.issues });
+  }
+  const { identifier, password } = result.data;
+  const foundUser = await User.findOne({
+    $or: [{ email:identifier }, { username: identifier }],
+  });
+  if(!foundUser){
+    return res.status(404).json({message:"User not Found"})
+  }
+
+  const passwordCheck = await bcrypt.compare(password,foundUser.password)
+
+  if (!passwordCheck) {
+    return res.status(401).json({message:"Wrong Password"})
+  }
+  const token = generateToken(foundUser._id.toString())
+  res.status(200).json({
+    message: "User logged in",
+    token, 
+    user:{
+      username: foundUser.username,
+      email: foundUser.email,
+    }
+  })
 };
