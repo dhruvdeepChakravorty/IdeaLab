@@ -1,7 +1,8 @@
-import {  Response } from "express";
+import { Response } from "express";
 import { ideaSchema } from "../types/idea.types";
 import { AuthRequest } from "../types/express.d";
 import Idea from "../models/idea";
+import Version from "../models/version";
 
 export const createIdea = async (req: AuthRequest, res: Response) => {
   const result = ideaSchema.safeParse(req.body);
@@ -68,6 +69,7 @@ export const deleteIdea = async (req: AuthRequest, res: Response) => {
   }
 
   await Idea.findByIdAndDelete(id);
+  await Version.deleteMany({ ideaId: id });
 
   res.status(200).json({
     message: "Idea deleted",
