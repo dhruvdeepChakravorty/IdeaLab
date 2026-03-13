@@ -19,10 +19,10 @@ User's Explanation: ${explanation}
 
 Analyze this idea and provide:
 - A refined, clearer version of the idea
-- Honest strengths (not overly positive)
-- Real weaknesses and challenges to consider
-- Concrete actionable next steps
-- 2 Socratic questions that challenge assumptions and help the user think deeper
+- Exactly 3 Honest strengths (not overly positive)
+- Exactly 3 Real weaknesses and challenges to consider
+- Exactly 4 Concrete actionable next steps
+- Exactly 2 Socratic questions that challenge assumptions and help the user think deeper
 
 Be honest, constructive and specific. Avoid generic advice.
 Return only the structured JSON output. No greetings, no explanations, no markdown. Just the JSON.
