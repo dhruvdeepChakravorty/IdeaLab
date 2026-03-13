@@ -1,19 +1,32 @@
 import { GoogleGenAI } from "@google/genai";
 import { aiOutputSchema } from "../types/aiOutput.types";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import dotenv from "dotenv";
 
-const apiKey = process.env.GEMINI_API_KEY;
+import { zodToJsonSchema } from "zod-to-json-schema";
+dotenv.config();
+const apiKey = process.env.API_KEY;
 if (!apiKey) {
-  throw new Error("GEMINI_API_KEY not defined");
+  throw new Error("API_KEY not defined");
 }
 const ai = new GoogleGenAI({ apiKey });
 
 const generateAiOutput = async (explanation: string, title: string) => {
   const prompt = `
-You are an idea refinement assistant. 
+You are an expert idea refinement assistant. Your job is to help users clarify and strengthen their ideas through structured analysis.
+
 Idea Title: ${title}
-Explanation: ${explanation}
-Refine this idea and provide structured feedback.
+User's Explanation: ${explanation}
+
+Analyze this idea and provide:
+- A refined, clearer version of the idea
+- Honest strengths (not overly positive)
+- Real weaknesses and challenges to consider
+- Concrete actionable next steps
+- 2 Socratic questions that challenge assumptions and help the user think deeper
+
+Be honest, constructive and specific. Avoid generic advice.
+Return only the structured JSON output. No greetings, no explanations, no markdown. Just the JSON.
+Use camelCase for all JSON field names: refinedIdea, strengths, weaknesses, nextSteps, questions.
 `;
 
   const response = await ai.models.generateContent({
@@ -29,4 +42,4 @@ Refine this idea and provide structured feedback.
   }
   return aiOutputSchema.parse(JSON.parse(response.text));
 };
- export default generateAiOutput
+export default generateAiOutput;

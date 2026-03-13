@@ -3,6 +3,7 @@ import { Response } from "express";
 import { versionSchema } from "../types/version.types";
 import Idea from "../models/idea";
 import Version from "../models/version";
+import generateAiOutput from "../config/gemini";
 
 export const createVersion = async (req: AuthRequest, res: Response) => {
   const result = versionSchema.safeParse(req.body);
@@ -27,12 +28,12 @@ export const createVersion = async (req: AuthRequest, res: Response) => {
   }
   const version = await Version.countDocuments({ ideaId });
   const currVersionNum = version + 1;
-
+  const aiOutput = await generateAiOutput(explanation,foundIdea.title)
   const createdVersion = await Version.create({
     ideaId: ideaId,
     explanation: explanation,
     versionNum: currVersionNum,
-    aiOutput: "AI output here",
+    aiOutput: aiOutput,
   });
 
   res.status(201).json({
