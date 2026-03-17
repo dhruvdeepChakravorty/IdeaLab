@@ -59,6 +59,7 @@ export const loginUser = async(req: Request, res: Response) => {
     message: "User logged in",
     token, 
     user:{
+      id: foundUser._id,
       username: foundUser.username,
       email: foundUser.email,
     }
