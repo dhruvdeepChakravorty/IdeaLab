@@ -14,7 +14,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ideas/:id" element={<IdeaDetail />} />
       </Routes>
-      <Toaster />
+      <Toaster position="top-center" />
     </BrowserRouter>
   );
 };
