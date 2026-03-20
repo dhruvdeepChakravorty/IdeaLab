@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { toast } from "sonner";
 import { loginSchema } from "@/types/login.types";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
@@ -32,7 +33,7 @@ const Login = () => {
         const passwordError = issues.find(
           (issue) => issue.path[0] === "password",
         )?.message;
-        setPending(false)
+        setPending(false);
         toast.error(identifierError || passwordError || "Invalid input");
         return;
       }
@@ -54,48 +55,55 @@ const Login = () => {
         },
       );
     } catch (error: any) {
-       toast.error(error.message || "Something went wrong")
+      toast.error(error.message || "Something went wrong");
     } finally {
       setPassword("");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Field>
-        <FieldLabel htmlFor="input-field-identifier">Username/Email</FieldLabel>
-        <Input
-          id="input-field-identifier"
-          type="text"
-          placeholder="Enter your username/email"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-        />
-        <FieldDescription>Enter your Username or Email</FieldDescription>
-      </Field>
+    <>
+      <form onSubmit={handleSubmit}>
+        <Field>
+          <FieldLabel htmlFor="input-field-identifier">
+            Username/Email
+          </FieldLabel>
+          <Input
+            id="input-field-identifier"
+            type="text"
+            placeholder="Enter your username/email"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+          />
+          <FieldDescription>Enter your Username or Email</FieldDescription>
+        </Field>
 
-      <Field>
-        <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
-        <Input
-          id="input-field-password"
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <FieldDescription>Enter your Password</FieldDescription>
-      </Field>
-      {pending ? (
-        <Button variant="secondary" disabled>
-          Logging In
-          <Spinner data-icon="inline-start" />
-        </Button>
-      ) : (
-        <Button type="submit" variant="outline">
-          Log In
-        </Button>
-      )}
-    </form>
+        <Field>
+          <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
+          <Input
+            id="input-field-password"
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <FieldDescription>Enter your Password</FieldDescription>
+        </Field>
+        {pending ? (
+          <Button variant="secondary" disabled>
+            Logging In
+            <Spinner data-icon="inline-start" />
+          </Button>
+        ) : (
+          <Button type="submit" variant="outline">
+            Log In
+          </Button>
+        )}
+      </form>
+      <p>
+        Don't have an account? <Link to="/register">Sign Up</Link>
+      </p>
+    </>
   );
 };
 export default Login;
