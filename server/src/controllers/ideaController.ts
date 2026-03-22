@@ -22,8 +22,7 @@ export const createIdea = async (req: AuthRequest, res: Response) => {
 
   res.status(201).json({
     message: "Idea created",
-    id: newIdea._id,
-    title: newIdea.title,
+    idea:newIdea,
   });
 };
 

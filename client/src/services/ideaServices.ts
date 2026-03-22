@@ -3,7 +3,7 @@ import api from "./api";
 export const createIdeaFunction = async (title: string) => {
   try {
     const result = await api.post("/ideas/", { title });
-    return result.data;
+    return result.data.idea;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Something Went Wrong");
   }
