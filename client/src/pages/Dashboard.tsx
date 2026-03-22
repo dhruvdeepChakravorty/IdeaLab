@@ -1,9 +1,9 @@
 import { getAllIdeaFunction } from "@/services/ideaServices";
 import { useEffect, useState } from "react";
 import type { Idea } from "@/types/idea.types";
-import { DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import CreateIdeaDialog from "@/components/createIdeaDialog";
+import CreateIdeaDialog from "../components/CreateIdeaDialog";
+import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [dialogState, setDialogState] = useState(false);
@@ -19,9 +19,11 @@ const Dashboard = () => {
   return (
     <>
       {ideas.map((idea) => (
+        <Link to={`/idea/${idea._id}`}>
         <div key={idea._id}>
           <div>{idea.title}</div>
         </div>
+        </Link>
       ))}
 
       <Button variant="outline" onClick={() => setDialogState(true)}>
