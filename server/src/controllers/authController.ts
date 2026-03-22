@@ -25,43 +25,55 @@ export const registerUser = async (req: Request, res: Response) => {
   });
 
   const token = generateToken(newUser._id.toString());
-  res.status(201).json({
-    message: "User created",
-    user: {
-      id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
-    },
-    token,
-  });
+  res
+    .status(201)
+    .cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    })
+    .json({
+      message: "User created",
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      
+    });
 };
 
-export const loginUser = async(req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response) => {
   const result = loginSchema.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ message: result.error.issues });
   }
   const { identifier, password } = result.data;
   const foundUser = await User.findOne({
-    $or: [{ email:identifier }, { username: identifier }],
+    $or: [{ email: identifier }, { username: identifier }],
   });
-  if(!foundUser){
-    return res.status(404).json({message:"User not Found"})
+  if (!foundUser) {
+    return res.status(404).json({ message: "User not Found" });
   }
 
-  const passwordCheck = await bcrypt.compare(password,foundUser.password)
+  const passwordCheck = await bcrypt.compare(password, foundUser.password);
 
   if (!passwordCheck) {
-    return res.status(401).json({message:"Wrong Password"})
+    return res.status(401).json({ message: "Wrong Password" });
   }
-  const token = generateToken(foundUser._id.toString())
-  res.status(200).json({
-    message: "User logged in",
-    token, 
-    user:{
-      id: foundUser._id,
-      username: foundUser.username,
-      email: foundUser.email,
-    }
-  })
+  const token = generateToken(foundUser._id.toString());
+  res
+    .status(200)
+    .cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    })
+    .json({
+      message: "User logged in",
+      token,
+      user: {
+        id: foundUser._id,
+        username: foundUser.username,
+        email: foundUser.email,
+      },
+    });
 };

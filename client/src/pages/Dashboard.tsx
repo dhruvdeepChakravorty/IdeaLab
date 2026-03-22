@@ -1,8 +1,9 @@
 import { getAllIdeaFunction } from "@/services/ideaServices";
 import { useEffect, useState } from "react";
+import type {Idea} from '@/types/idea.types'
 
 const Dashboard = () => {
-  const [ideas,setIdeas]= useState([])
+  const [ideas,setIdeas]= useState<Idea[]>([])
 
   useEffect(
     ()=>{
@@ -17,7 +18,11 @@ fetchAllIdeas()
   )
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Dashboard Page</h1>
+     {ideas.map((idea)=>(
+      <div key={idea._id}>
+        <div>{idea.title}</div>
+      </div>
+     ))}
     </>
   );
 };

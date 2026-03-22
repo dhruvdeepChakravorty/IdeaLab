@@ -48,23 +48,20 @@ const Register = () => {
         return;
       }
 
-      toast.promise<{ token: string; user: any }>(
-        registerFuntion(username, email, password),
-        {
-          loading: "Signing in...",
-          success: (result) => {
-            login(result.token, result.user);
-            navigate("/dashboard");
-            setPending(false);
-            return "Signed Up";
-          },
-          error: (error: any) => {
-            setPending(false);
-            setPassword("");
-            return error.message || "Sign up failed";
-          },
+      toast.promise<{ user: any }>(registerFuntion(username, email, password), {
+        loading: "Signing in...",
+        success: (result) => {
+          login(result.user);
+          navigate("/dashboard");
+          setPending(false);
+          return "Signed Up";
         },
-      );
+        error: (error: any) => {
+          setPending(false);
+          setPassword("");
+          return error.message || "Sign up failed";
+        },
+      });
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
     }

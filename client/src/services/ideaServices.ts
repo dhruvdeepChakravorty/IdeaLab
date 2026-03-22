@@ -11,8 +11,8 @@ export const createIdeaFunction = async (title: string) => {
 
 export const getAllIdeaFunction = async () => {
   try {
-    const result = await api.get("/ideas/",);
-    return result.data;
+    const result = await api.get("/ideas/");
+    return result.data.allIdeas;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Something Went Wrong");
   }

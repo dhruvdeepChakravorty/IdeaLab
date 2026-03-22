@@ -38,12 +38,12 @@ const Login = () => {
         return;
       }
 
-      toast.promise<{ token: string; user: any }>(
+      toast.promise<{user: any }>(
         loginFuntion(identifier, password),
         {
           loading: "Logging in...",
           success: (result) => {
-            login(result.token, result.user);
+            login( result.user);
             navigate("/dashboard");
             setPending(false);
             return "Logged in";
