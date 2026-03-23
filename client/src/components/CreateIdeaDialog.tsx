@@ -35,6 +35,7 @@ const CreateIdeaDialog = ({
     setPending(true);
     if (!title.trim()) {
       toast.error("Please Add Title");
+      setPending(false);
       return;
     }
     toast.promise<Idea>(createIdeaFunction(title), {

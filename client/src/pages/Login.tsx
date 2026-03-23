@@ -9,11 +9,14 @@ import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { toast } from "sonner";
 import { loginSchema } from "@/types/login.types";
 import { Link } from "react-router-dom";
+import { Eye } from "lucide-react";
+import { EyeOff } from "lucide-react";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (e: React.SubmitEvent) => {
@@ -38,22 +41,19 @@ const Login = () => {
         return;
       }
 
-      toast.promise<{user: any }>(
-        loginFuntion(identifier, password),
-        {
-          loading: "Logging in...",
-          success: (result) => {
-            login( result.user);
-            navigate("/dashboard");
-            setPending(false);
-            return "Logged in";
-          },
-          error: (error: any) => {
-            setPending(false);
-            return error.message || "Log in failed";
-          },
+      toast.promise<{ user: any }>(loginFuntion(identifier, password), {
+        loading: "Logging in...",
+        success: (result) => {
+          login(result.user);
+          navigate("/dashboard");
+          setPending(false);
+          return "Logged in";
         },
-      );
+        error: (error: any) => {
+          setPending(false);
+          return error.message || "Log in failed";
+        },
+      });
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
     } finally {
@@ -82,11 +82,14 @@ const Login = () => {
           <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
           <Input
             id="input-field-password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
+          />{" "}
+          <Button type="button" onClick={()=>setShowPassword(!showPassword)}>
+            {showPassword ? <EyeOff /> : <Eye />}
+          </Button>
           <FieldDescription>Enter your Password</FieldDescription>
         </Field>
         {pending ? (

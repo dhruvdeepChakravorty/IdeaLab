@@ -14,8 +14,8 @@ const Dashboard = () => {
       try {
         const allIdeas = await getAllIdeaFunction();
         setIdeas(allIdeas);
-      } catch (error:any) {
-        toast.error(error.message || "Something went wrong")
+      } catch (error: any) {
+        toast.error(error.message || "Something went wrong");
       }
       return;
     };
@@ -24,11 +24,8 @@ const Dashboard = () => {
   return (
     <>
       {ideas.map((idea) => (
-        <Link to={`/idea/${idea._id}`}>
-        <div key={idea._id}>
-          
+        <Link key={idea._id} to={`/idea/${idea._id}`}>
           <div>{idea.title}</div>
-        </div>
         </Link>
       ))}
 

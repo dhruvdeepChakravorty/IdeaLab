@@ -27,10 +27,19 @@ export const getAllIdeaVersion = async (ideaId: string) => {
   }
 };
 
-export const getIdeaById = async(ideaId: string) => {
+export const getIdeaById = async (ideaId: string) => {
   try {
     const result = await api.get(`/ideas/${ideaId}`);
     return result.data.foundIdea;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Something went wrong");
+  }
+};
+
+export const createVersion = async (ideaId: string, explanation: string) => {
+  try {
+    const result = await api.post(`/ideas/${ideaId}/versions`, { explanation });
+    return result.data.createdVersion;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Something went wrong");
   }

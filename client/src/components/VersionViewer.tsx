@@ -6,6 +6,9 @@ import { ArrowRight } from "lucide-react";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "./ui/spinner";
+import { toast } from "sonner";
+import { createVersion } from "@/services/ideaServices";
+import { useParams } from "react-router-dom";
 
 interface VerisonViewerProps {
   versions: Version[];
@@ -13,10 +16,38 @@ interface VerisonViewerProps {
 }
 
 const VersionViewer = ({ versions, onVersionCreated }: VerisonViewerProps) => {
+  const { id } = useParams();
+
   const [explanation, setExplanation] = useState("");
   const [pending, setPending] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(versions.length - 1);
-  
+  const [currentIndex, setCurrentIndex] = useState(
+    versions.length === 0 ? 0 : versions.length - 1,
+  );
+  if (!id) {
+    return null;
+  }
+  const handleSubmit = async () => {
+    setPending(true);
+    if (!explanation.trim()) {
+      toast.error("Please enter explanation");
+      setPending(false);
+      return;
+    }
+    toast.promise<Version>(createVersion(id, explanation), {
+      loading: "Processing...",
+      success: (result) => {
+        onVersionCreated(result);
+        setExplanation("");
+        setCurrentIndex(versions.length);
+        setPending(false);
+        return "Version Generated";
+      },
+      error: (error: any) => {
+        setPending(false);
+        return error.message || "Something went wrong";
+      },
+    });
+  };
   return (
     <>
       <Button
@@ -26,7 +57,7 @@ const VersionViewer = ({ versions, onVersionCreated }: VerisonViewerProps) => {
         {" "}
         <ArrowLeft />{" "}
       </Button>
-      {currentIndex === versions.length ? (
+      {currentIndex === versions.length || versions.length === 0 ? (
         <>
           <div>Enter Your Explanation to diagnose your idea further</div>
           <Field>
@@ -36,19 +67,19 @@ const VersionViewer = ({ versions, onVersionCreated }: VerisonViewerProps) => {
               id="textarea-message"
               placeholder="Type your explanation here."
               value={explanation}
-              onChange={(e)=>(setExplanation(e.target.value))}
+              onChange={(e) => setExplanation(e.target.value)}
             />
           </Field>
           {pending ? (
-          <Button variant="secondary" disabled>
-            Diagnosing...
-            <Spinner data-icon="inline-start" />
-          </Button>
-        ) : (
-          <Button type="submit" variant="outline">
-            Generate Version
-          </Button>
-        )}
+            <Button variant="secondary" disabled>
+              Diagnosing...
+              <Spinner data-icon="inline-start" />
+            </Button>
+          ) : (
+            <Button type="button" variant="outline" onClick={handleSubmit}>
+              Generate Version
+            </Button>
+          )}
         </>
       ) : (
         <>
@@ -91,7 +122,6 @@ const VersionViewer = ({ versions, onVersionCreated }: VerisonViewerProps) => {
               disabled
             />
           </Field>
-          
         </>
       )}
 

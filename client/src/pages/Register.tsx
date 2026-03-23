@@ -9,12 +9,15 @@ import { registerFuntion } from "@/services/authServices";
 import { useAuth } from "@/context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Eye } from "lucide-react";
+import { EyeOff } from "lucide-react";
 
 const Register = () => {
   const [pending, setPending] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -99,11 +102,14 @@ const Register = () => {
           <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
           <Input
             id="input-field-password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Button type="button" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <EyeOff /> : <Eye />}
+          </Button>
           <FieldDescription>
             Enter a password for your account (min 4 char).
           </FieldDescription>
