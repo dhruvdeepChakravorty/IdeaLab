@@ -4,14 +4,19 @@ import type { Idea } from "@/types/idea.types";
 import { Button } from "@/components/ui/button";
 import CreateIdeaDialog from "../components/CreateIdeaDialog";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 const Dashboard = () => {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [dialogState, setDialogState] = useState(false);
 
   useEffect(() => {
     const fetchAllIdeas = async () => {
-      const allIdeas = await getAllIdeaFunction();
-      setIdeas(allIdeas);
+      try {
+        const allIdeas = await getAllIdeaFunction();
+        setIdeas(allIdeas);
+      } catch (error:any) {
+        toast.error(error.message || "Something went wrong")
+      }
       return;
     };
     fetchAllIdeas();
@@ -21,6 +26,7 @@ const Dashboard = () => {
       {ideas.map((idea) => (
         <Link to={`/idea/${idea._id}`}>
         <div key={idea._id}>
+          
           <div>{idea.title}</div>
         </div>
         </Link>

@@ -7,8 +7,9 @@ export interface AiOutput {
 }
 
 export interface Version {
+  _id:string,
   ideaId: string;
-  explantion: string;
-  versionNum: Number;
+  explanation: string;
+  versionNum: number;
   aiOutput: AiOutput;
 }
