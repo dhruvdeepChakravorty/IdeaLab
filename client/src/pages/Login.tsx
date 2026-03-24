@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginFuntion } from "../services/authServices";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -19,6 +19,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) return <Navigate to="/dashboard" />;
   const handleSubmit = async (e: React.SubmitEvent) => {
     setPending(true);
     try {
@@ -87,7 +90,7 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />{" "}
-          <Button type="button" onClick={()=>setShowPassword(!showPassword)}>
+          <Button type="button" onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? <EyeOff /> : <Eye />}
           </Button>
           <FieldDescription>Enter your Password</FieldDescription>

@@ -7,7 +7,7 @@ import { registerSchema } from "@/types/register.types";
 import { toast } from "sonner";
 import { registerFuntion } from "@/services/authServices";
 import { useAuth } from "@/context/authContext";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
@@ -20,7 +20,8 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) return <Navigate to="/dashboard" />;
   const handleSubmit = (e: React.SubmitEvent) => {
     setPending(true);
     try {

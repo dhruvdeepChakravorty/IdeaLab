@@ -44,3 +44,12 @@ export const createVersion = async (ideaId: string, explanation: string) => {
     throw new Error(error.response?.data?.message || "Something went wrong");
   }
 };
+
+export const deleteIdea = async (ideaId: string) => {
+  try {
+    const result = await api.delete(`/ideas/${ideaId}`);
+    return result.data.message;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Something went wrong");
+  }
+};

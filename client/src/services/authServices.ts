@@ -25,3 +25,21 @@ export const registerFuntion = async (
     throw new Error(error.response?.data?.message || "Something went wrong");
   }
 };
+
+export const getMe = async () => {
+  try {
+    const result = await api.get("/auth/me");
+    return result.data.user;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Something went wrong");
+  }
+};
+
+export const logutFuntion = async () => {
+  try {
+    const result = await api.post("/auth/logout");
+    return result.data.message;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Something went wrong");
+  }
+};
