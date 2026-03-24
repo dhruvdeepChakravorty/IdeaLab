@@ -1,34 +1,50 @@
 import { useAuth } from "@/context/authContext";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <div>
-      <h1>IdeaLab</h1>
-      {isAuthenticated ? (
-        <div>
-          <Link to={"/dashboard"}>
-            <Button>Ideas</Button>
-          </Link>
-          <Button variant={"destructive"} onClick={logout}>
-            {" "}
-            Logout{" "}
-          </Button>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+        <Link
+          to="/"
+          className="text-base  font-bold tracking-tight text-foreground"
+        >
+          IdeaLab
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard">
+                <Button variant="ghost" size="sm">
+                  Ideas
+                </Button>
+              </Link>
+              <Button variant="destructive" size="sm" onClick={logout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="ghost" size="sm">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button size="sm">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
-      ) : (
-        <div>
-          <Link to={"/login"}>
-            <Button>Login</Button>
-          </Link>
-          <Link to={"/register"}>
-            <Button>Sign Up</Button>
-          </Link>
-        </div>
-      )}
-    </div>
+      </div>
+    </header>
   );
 };
 

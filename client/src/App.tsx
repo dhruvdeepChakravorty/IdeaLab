@@ -6,12 +6,14 @@ import IdeaDetail from "./pages/IdeaDetail";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import Home from "./pages/Home";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
+        <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
@@ -31,7 +33,7 @@ const App = () => {
           }
         />
       </Routes>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" theme="system"/>
     </BrowserRouter>
   );
 };

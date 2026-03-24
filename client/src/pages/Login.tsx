@@ -9,8 +9,7 @@ import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { toast } from "sonner";
 import { loginSchema } from "@/types/login.types";
 import { Link } from "react-router-dom";
-import { Eye } from "lucide-react";
-import { EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
@@ -22,17 +21,14 @@ const Login = () => {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) return <Navigate to="/dashboard" />;
+
   const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
     setPending(true);
     try {
-      e.preventDefault();
-      const validation = loginSchema.safeParse({
-        identifier,
-        password,
-      });
+      const validation = loginSchema.safeParse({ identifier, password });
       if (!validation.success) {
         const issues = validation.error.issues;
-
         const identifierError = issues.find(
           (issue) => issue.path[0] === "identifier",
         )?.message;
@@ -65,51 +61,92 @@ const Login = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <Field>
-          <FieldLabel htmlFor="input-field-identifier">
-            Username/Email
-          </FieldLabel>
-          <Input
-            id="input-field-identifier"
-            type="text"
-            placeholder="Enter your username/email"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-          />
-          <FieldDescription>Enter your Username or Email</FieldDescription>
-        </Field>
+    <div className="relative min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-sm space-y-6 rounded-xl border border-border bg-card p-8 shadow-sm">
+        <div className="space-y-1 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Welcome back
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Sign in to your IdeaLab account
+          </p>
+        </div>
 
-        <Field>
-          <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
-          <Input
-            id="input-field-password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />{" "}
-          <Button type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <EyeOff /> : <Eye />}
-          </Button>
-          <FieldDescription>Enter your Password</FieldDescription>
-        </Field>
-        {pending ? (
-          <Button variant="secondary" disabled>
-            Logging In
-            <Spinner data-icon="inline-start" />
-          </Button>
-        ) : (
-          <Button type="submit" variant="outline">
-            Log In
-          </Button>
-        )}
-      </form>
-      <p>
-        Don't have an account? <Link to="/register">Sign Up</Link>
-      </p>
-    </>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Field className="space-y-1.5">
+            <FieldLabel
+              htmlFor="input-field-identifier"
+              className="text-sm font-medium text-foreground"
+            >
+              Username / Email
+            </FieldLabel>
+            <Input
+              id="input-field-identifier"
+              type="text"
+              placeholder="Enter your username or email"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              className="h-9 text-sm"
+            />
+          </Field>
+
+          <Field className="space-y-1.5">
+            <FieldLabel
+              htmlFor="input-field-password"
+              className="text-sm font-medium text-foreground"
+            >
+              Password
+            </FieldLabel>
+
+            <div className="relative">
+              <Input
+                id="input-field-password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-9 pr-9 text-sm"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-transparent"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          </Field>
+
+          {/* Submit */}
+          {pending ? (
+            <Button variant="secondary" disabled className="w-full h-9 text-sm">
+              Logging in <Spinner data-icon="inline-start" className="ml-2" />
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full h-9 text-sm">
+              Log In
+            </Button>
+          )}
+        </form>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 };
+
 export default Login;

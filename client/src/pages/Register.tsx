@@ -1,4 +1,4 @@
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,7 @@ import { registerFuntion } from "@/services/authServices";
 import { useAuth } from "@/context/authContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Eye } from "lucide-react";
-import { EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const [pending, setPending] = useState(false);
@@ -21,11 +20,13 @@ const Register = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+
   if (isAuthenticated) return <Navigate to="/dashboard" />;
+
   const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault();
     setPending(true);
     try {
-      e.preventDefault();
       const validation = registerSchema.safeParse({
         username,
         email,
@@ -36,15 +37,12 @@ const Register = () => {
         const usernameError = issues.find(
           (issue) => issue.path[0] === "username",
         )?.message;
-
         const emailError = issues.find(
           (issue) => issue.path[0] === "email",
         )?.message;
-
         const passwordError = issues.find(
           (issue) => issue.path[0] === "password",
         )?.message;
-
         setPending(false);
         toast.error(
           usernameError || emailError || passwordError || "Invalid input",
@@ -70,67 +68,109 @@ const Register = () => {
       toast.error(error.message || "Something went wrong");
     }
   };
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <Field>
-          <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
-          <Input
-            id="input-field-username"
-            type="text"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <FieldDescription>
-            Choose a unique username for your account.
-          </FieldDescription>
-        </Field>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-sm space-y-6 rounded-xl border border-border bg-card p-8 shadow-sm">
+        <div className="space-y-1 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Create an account
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Start refining your ideas with IdeaLab
+          </p>
+        </div>
 
-        <Field>
-          <FieldLabel htmlFor="input-field-email">Email</FieldLabel>
-          <Input
-            id="input-field-email"
-            type="text"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <FieldDescription>Enter your Email for your account</FieldDescription>
-        </Field>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Field className="space-y-1.5">
+            <FieldLabel
+              htmlFor="input-field-username"
+              className="text-sm font-medium text-foreground"
+            >
+              Username
+            </FieldLabel>
+            <Input
+              id="input-field-username"
+              type="text"
+              placeholder="Choose a username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="h-9 text-sm"
+            />
+          </Field>
 
-        <Field>
-          <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
-          <Input
-            id="input-field-password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <EyeOff /> : <Eye />}
-          </Button>
-          <FieldDescription>
-            Enter a password for your account (min 4 char).
-          </FieldDescription>
-        </Field>
+          <Field className="space-y-1.5">
+            <FieldLabel
+              htmlFor="input-field-email"
+              className="text-sm font-medium text-foreground"
+            >
+              Email
+            </FieldLabel>
+            <Input
+              id="input-field-email"
+              type="text"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-9 text-sm"
+            />
+          </Field>
 
-        {pending ? (
-          <Button variant="secondary" disabled>
-            Signing In
-            <Spinner data-icon="inline-start" />
-          </Button>
-        ) : (
-          <Button type="submit" variant="outline">
-            Sign Up
-          </Button>
-        )}
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Log In</Link>
-      </p>
-    </>
+          <Field className="space-y-1.5">
+            <FieldLabel
+              htmlFor="input-field-password"
+              className="text-sm font-medium text-foreground"
+            >
+              Password
+            </FieldLabel>
+            <div className="relative">
+              <Input
+                id="input-field-password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a password (min 4 chars)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-9 pr-9 text-sm"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-transparent"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          </Field>
+
+          {pending ? (
+            <Button variant="secondary" disabled className="w-full h-9 text-sm">
+              Signing up <Spinner data-icon="inline-start" className="ml-2" />
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full h-9 text-sm">
+              Sign Up
+            </Button>
+          )}
+        </form>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Log in
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 };
+
 export default Register;
