@@ -29,7 +29,8 @@ export const registerUser = async (req: Request, res: Response) => {
     .status(201)
     .cookie("token", token, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
     })
     .json({
       message: "User created",
@@ -38,7 +39,6 @@ export const registerUser = async (req: Request, res: Response) => {
         username: newUser.username,
         email: newUser.email,
       },
-      
     });
 };
 
@@ -65,7 +65,8 @@ export const loginUser = async (req: Request, res: Response) => {
     .status(200)
     .cookie("token", token, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
     })
     .json({
       message: "User logged in",
