@@ -5,7 +5,7 @@ import { useAuth } from "../context/authContext";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
-import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { toast } from "sonner";
 import { loginSchema } from "@/types/login.types";
 import { Link } from "react-router-dom";
@@ -123,7 +123,7 @@ const Login = () => {
             </div>
           </Field>
 
-          {/* Submit */}
+        
           {pending ? (
             <Button variant="secondary" disabled className="w-full h-9 text-sm">
               Logging in <Spinner data-icon="inline-start" className="ml-2" />
