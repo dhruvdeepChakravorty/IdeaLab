@@ -11,7 +11,7 @@ const dbConnect = async () => {
         console.log("URI doesnt exist in ENV")
         process.exit(1)
     }
-    console.log(uri)
+    
     try {
         await mongoose.connect(uri)
        console.log(`connection successful ${mongoose.connection.host}`)
