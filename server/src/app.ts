@@ -5,10 +5,19 @@ import ideaRouter from "./routes/ideaRoutes";
 import versionRouter from "./routes/versionRoute";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 const app = express();
+const globalLimiter = rateLimit({
+  windowMs:15*60&1000,
+  max:100,
+  message:{message:"Too many request"},
+  standardHeaders:true,
+  legacyHeaders:false
+})
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials:true }))
 app.use(cookieParser())
+app.use(globalLimiter)
 app.use(express.json());
 
 app.get("/health", (req, res) => {

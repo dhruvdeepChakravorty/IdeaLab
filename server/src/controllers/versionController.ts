@@ -27,8 +27,23 @@ export const createVersion = async (req: AuthRequest, res: Response) => {
       .json({ message: "User unathorized to create version" });
   }
   const version = await Version.countDocuments({ ideaId });
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const userIdeas = await Idea.find({ userId }).select("_id");
+  const ideaIds = userIdeas.map((idea) => idea._id);
+  const todayCount = await Version.countDocuments({
+    ideaId: { $in: ideaIds },
+    createdAt: { $gte: today },
+  });
+  if (todayCount >= 5) {
+    return res
+      .status(429)
+      .json({
+        message: "Daily AI generation limit reached. Try again tomorrow.",
+      });
+  }
   const currVersionNum = version + 1;
-  const aiOutput = await generateAiOutput(explanation,foundIdea.title)
+  const aiOutput = await generateAiOutput(explanation, foundIdea.title);
   const createdVersion = await Version.create({
     ideaId: ideaId,
     explanation: explanation,
